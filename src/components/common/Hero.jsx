@@ -63,7 +63,12 @@ const Hero = () => {
           {/* Watch Demo */}
           <button
             type="button"
-            onClick={handleWatchDemo}
+           onClick={() => {
+  document.getElementById("dashboard")?.scrollIntoView({
+    behavior: "smooth",
+    block: "start",
+  });
+}}
             className="flex items-center gap-2 rounded-xl border border-white/10 px-7 py-3 font-semibold text-textPrimary transition hover:border-primary/50 hover:bg-primary/5"
           >
             <Play size={18} className="text-primary" />

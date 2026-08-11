@@ -8,10 +8,10 @@ import {
 
 const DashboardPreview = () => {
   return (
-    <section
-      id="dashboard"
-      className="px-4 sm:px-6 lg:px-8"
-    >
+   <section
+  id="dashboard"
+  className="px-4 sm:px-6 lg:px-8"
+>
       {/* Heading */}
       <div className="mx-auto max-w-3xl text-center">
 
