@@ -78,12 +78,12 @@ const ExpenseChart = ({
             >
               <AreaChart
                 data={data}
-                margin={{
-                  top: 10,
-                  right: 20,
-                  left: -20,
-                  bottom: 0,
-                }}
+               margin={{
+  top: 10,
+  right: 30,
+  left: 10,
+  bottom: 0,
+}}
               >
                 {/* Gradient */}
                 <defs>
@@ -117,16 +117,20 @@ const ExpenseChart = ({
 
                 {/* X Axis */}
                 <XAxis
-                  dataKey="month"
-                  tick={{
-                    fill: "#A8A29E",
-                    fontSize: 10,
-                  }}
-                  axisLine={false}
-                  tickLine={false}
-                  tickMargin={10}
-                  interval={0}
-                />
+  dataKey="month"
+  tick={{
+    fill: "#A8A29E",
+    fontSize: 10,
+  }}
+  axisLine={false}
+  tickLine={false}
+  tickMargin={10}
+  interval={0}
+  padding={{
+    left: 20,
+    right: 20,
+  }}
+/>
 
                 {/* Tooltip */}
                 <Tooltip
