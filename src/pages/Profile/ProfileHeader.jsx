@@ -3,32 +3,25 @@ import { useEffect, useRef, useState } from "react";
 
 const ProfileHeader = ({ profile }) => {
   const fileInputRef = useRef(null);
-
   const [previewImage, setPreviewImage] = useState(null);
 
-  // User-specific storage key
+  // Unique key for current logged-in user
   const getStorageKey = () => {
-    if (!profile?.id && !profile?._id && !profile?.email) {
-      return null;
-    }
+    const userId = profile?.id || profile?._id || profile?.email;
 
-    const userId =
-      profile?.id ||
-      profile?._id ||
-      profile?.email;
+    if (!userId) return null;
 
     return `expenseflow_profile_image_${userId}`;
   };
 
-  // ==========================
-  // Load Saved Profile Image
-  // ==========================
+  // Load saved image
   useEffect(() => {
-    if (!profile) return;
-
     const storageKey = getStorageKey();
 
-    if (!storageKey) return;
+    if (!storageKey) {
+      setPreviewImage(null);
+      return;
+    }
 
     const savedImage = localStorage.getItem(storageKey);
 
@@ -39,30 +32,28 @@ const ProfileHeader = ({ profile }) => {
     }
   }, [profile]);
 
-  // ==========================
-  // Open File Picker
-  // ==========================
+  // Open file picker
   const handleImageClick = () => {
     fileInputRef.current?.click();
   };
 
-  // ==========================
-  // Select Image
-  // ==========================
-  const handleImageChange = (e) => {
-    const file = e.target.files?.[0];
+  // Select image
+  const handleImageChange = (event) => {
+    const file = event.target.files?.[0];
 
     if (!file) return;
 
-    // Only images allowed
+    // Image validation
     if (!file.type.startsWith("image/")) {
-      alert("Please select an image file.");
+      alert("Please select a valid image.");
+      event.target.value = "";
       return;
     }
 
-    // Optional size limit: 5MB
+    // 5MB limit
     if (file.size > 5 * 1024 * 1024) {
       alert("Please select an image smaller than 5MB.");
+      event.target.value = "";
       return;
     }
 
@@ -70,32 +61,36 @@ const ProfileHeader = ({ profile }) => {
 
     if (!storageKey) {
       alert("User information is not available.");
+      event.target.value = "";
       return;
     }
 
     const reader = new FileReader();
 
-    reader.onloadend = () => {
+    reader.onload = () => {
       const imageData = reader.result;
 
-      // Save image for this particular user
+      // Save for this specific user
       localStorage.setItem(storageKey, imageData);
 
-      // Immediately update UI
+      // Immediately show image
       setPreviewImage(imageData);
+    };
+
+    reader.onerror = () => {
+      alert("Unable to read this image.");
     };
 
     reader.readAsDataURL(file);
 
-    // Reset input so same image can be selected again
-    e.target.value = "";
+    // Allow selecting same image again
+    event.target.value = "";
   };
 
   return (
     <div className="flex flex-col items-center gap-5 rounded-2xl border border-white/10 bg-white/[0.03] p-6 md:flex-row md:items-center">
       {/* Avatar */}
       <div className="relative flex-shrink-0">
-
         {/* Hidden File Input */}
         <input
           ref={fileInputRef}
@@ -105,7 +100,7 @@ const ProfileHeader = ({ profile }) => {
           className="hidden"
         />
 
-        {/* Profile Image / Default Avatar */}
+        {/* Profile Image */}
         {previewImage ? (
           <img
             src={previewImage}
@@ -123,23 +118,7 @@ const ProfileHeader = ({ profile }) => {
           type="button"
           onClick={handleImageClick}
           aria-label="Change profile picture"
-          className="
-            absolute
-            bottom-1
-            right-1
-            flex
-            h-9
-            w-9
-            items-center
-            justify-center
-            rounded-full
-            bg-[#D9B86C]
-            text-white
-            shadow-md
-            transition
-            hover:scale-105
-            hover:bg-[#C8A85D]
-          "
+          className="absolute bottom-1 right-1 flex h-9 w-9 items-center justify-center rounded-full bg-[#D9B86C] text-white shadow-md transition hover:scale-105 hover:bg-[#C8A85D]"
         >
           <Camera size={18} />
         </button>
@@ -147,7 +126,6 @@ const ProfileHeader = ({ profile }) => {
 
       {/* User Info */}
       <div className="min-w-0 flex-1 text-center md:text-left">
-
         <h1 className="truncate text-2xl font-bold text-white">
           {profile?.fullName || "User"}
         </h1>
@@ -157,7 +135,6 @@ const ProfileHeader = ({ profile }) => {
         </p>
 
         <div className="mt-5 flex flex-wrap justify-center gap-2 md:justify-start">
-
           <span className="max-w-full truncate rounded-xl bg-[#151515] px-3 py-1.5 text-sm text-slate-300">
             📧 {profile?.email || "Email not available"}
           </span>
@@ -169,7 +146,6 @@ const ProfileHeader = ({ profile }) => {
           <span className="rounded-xl bg-[#151515] px-3 py-1.5 text-sm text-slate-300">
             📍 {profile?.city || "Location not added"}
           </span>
-
         </div>
       </div>
     </div>
