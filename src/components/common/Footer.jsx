@@ -106,7 +106,7 @@ const Footer = () => {
               </h3>
 
               <a
-                href="mailto:divgang23@gmail.com?subject=ExpenseFlow%20Contact"
+                href="mailto:divyanshugangwar663@gmail.com?subject=ExpenseFlow%20Contact"
                 className="block text-[#C5CCC6] transition hover:text-[#D6B36A]"
               >
                 📧 divyanshugangwar663@gmail.com
